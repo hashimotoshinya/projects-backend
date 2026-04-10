@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\DailyReportController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/stores/{store}/visits', [VisitController::class, 'index']);
+
 // 認証必須（Session Cookie）
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -20,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // 店舗
-    Route::get('/stores/{store}/visits', [VisitController::class, 'index']);
+    //Route::get('/stores/{store}/visits', [VisitController::class, 'index']);
     Route::post('/stores/{store}/visits', [VisitController::class, 'store']);
     Route::get('/stores', [StoreController::class,'index']);
     Route::post('/stores', [StoreController::class,'store']);
