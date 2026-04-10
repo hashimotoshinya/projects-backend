@@ -1,16 +1,24 @@
 FROM php:8.2-cli
 
-WORKDIR /app
-
-COPY . .
-
+# 必要なパッケージ
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev \
-    && docker-php-ext-install zip
+    git unzip curl libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
 # Composerインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# 作業ディレクトリ
+WORKDIR /app
+
+# ファイルコピー
+COPY . .
+
+# Laravelセットアップ
 RUN composer install --no-dev --optimize-autoloader
 
-CMD php artisan serve --host 0.0.0.0 --port 10000
+# ポート
+EXPOSE 10000
+
+# 起動
+CMD php artisan serve --host=0.0.0.0 --port=10000
