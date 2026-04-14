@@ -12,7 +12,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('CORS_ALLOWED_ORIGIN', 'http://localhost:3000')],
+    'allowed_origins' => [
+        'https://projects-frontend-git-main-hashimotoshinyas-projects.vercel.app',
+    ],
 
     'allowed_origins_patterns' => [],
 
