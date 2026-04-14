@@ -10,7 +10,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader \
+ && php artisan config:clear \
+ && php artisan cache:clear \
+ && php artisan config:cache
 
 EXPOSE 10000
 
