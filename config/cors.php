@@ -12,9 +12,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'https://projects-frontend-git-main-hashimotoshinyas-projects.vercel.app',
-    ],
+    'allowed_origins' => array_filter(explode(',', env('CORS_ALLOWED_ORIGIN', ''))),
 
     'allowed_origins_patterns' => [],
 

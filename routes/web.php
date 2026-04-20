@@ -9,9 +9,19 @@ use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 // sanctum/csrf-cookie エンドポイント
 // GET で呼ばれる（axios が GET で呼んでいるため）
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
-    $response = app(CsrfCookieController::class)->show($request);
+    $token = csrf_token();
 
-    return $response->setContent(json_encode([
-        'csrf_token' => csrf_token(),
-    ]))->header('Content-Type', 'application/json');
+    return response()
+        ->json(['csrf_token' => $token])
+        ->withCookie(cookie(
+            'XSRF-TOKEN',
+            $token,
+            120,
+            '/',
+            env('SESSION_DOMAIN'),
+            env('SESSION_SECURE_COOKIE', true),
+            false,
+            false,
+            'none',
+        ));
 })->middleware('web');
