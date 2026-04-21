@@ -12,49 +12,43 @@ class AuthController extends Controller
     // 新規登録
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
-        ]);
-
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'email_verified_at' => now(),
-            'password' => Hash::make($validated['password']),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt    ($request->password),
         ]);
 
-        Auth::login($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json($user);
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 
     // ログイン
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $request->email)->first();
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Invalid credentials'
-            ], 401);
+        if (! $user || ! Hash::check($request->password,$user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $request->session()->regenerate();
+        // 🔥 トークン発行
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(Auth::user());
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 
     // ログアウト
     public function logout(Request $request)
     {
-        if (auth()->check()) {
-            auth()->guard('web')->logout();
-        }
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // 🔥 今使ってるトークンを削除
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logout successful'
