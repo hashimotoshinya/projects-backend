@@ -13,6 +13,7 @@ class StoreController extends Controller
      */
     public function index()
     {
+        dd(auth()->id());
         $stores = Store::where('user_id', auth()->id())
             ->withMax('visits', 'visited_at')
             ->latest()
