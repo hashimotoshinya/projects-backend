@@ -12,15 +12,20 @@ class StoreController extends Controller
      * 店舗一覧
      */
     public function index()
-    {
-        dd(auth()->id());
+{
+    try {
         $stores = Store::where('user_id', auth()->id())
-            
             ->latest()
             ->get();
 
         return response()->json($stores);
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * 店舗登録
