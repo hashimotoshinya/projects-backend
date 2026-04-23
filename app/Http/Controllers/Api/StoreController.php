@@ -15,7 +15,7 @@ class StoreController extends Controller
     {
         dd(auth()->id());
         $stores = Store::where('user_id', auth()->id())
-            ->withMax('visits', 'visited_at')
+            
             ->latest()
             ->get();
 
