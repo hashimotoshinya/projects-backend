@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // 店舗
     Route::get('/stores/{store}/visits', [VisitController::class, 'index']);
     Route::post('/stores/{store}/visits', [VisitController::class, 'store']);
-    //Route::get('/stores', [StoreController::class,'index']);
+    Route::get('/stores', [StoreController::class,'index']);
     Route::post('/stores', [StoreController::class,'store']);
     Route::get('/stores/{store}', [StoreController::class, 'show']);
     Route::put('/stores/{store}', [StoreController::class, 'update']);
